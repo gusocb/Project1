@@ -18,6 +18,7 @@ class Pokemon {
         // this.color = color;
         this.powerBall = [];
         this.direction = direction;
+        this.cant = 5;
 
 
     }
@@ -82,24 +83,32 @@ let player1 = new Pokemon (100,300,80,80,1);
 let player2 = new Pokemon (800,300,80,80,-1)
 
 //CONTROLES
-
-let controls;
+let controls = [];
 
 window.addEventListener('keydown', function (e) {
-    if(e.keyCode == 37) {player2.makePowerBall()}
+    if(e.keyCode == 37) {
+        if(player2.cant > 0) {
+            player2.makePowerBall()
+            player2.cant--
+            if(player2.cant <= 0) {
+                setTimeout(()=> player2.cant = 5, 1000)
+            }
+        }
+    }
     if(e.keyCode == 68) {player1.makePowerBall()}
-    controls = e.keyCode;
+    controls = (controls || [])
+    controls[e.keyCode] = true;
 });
 
-window.addEventListener('keyup', function () {
-    controls = false;
+window.addEventListener('keyup', function (e) {
+    controls[e.keyCode] = false;
 });
 
 function controlPlayer(){
-    if (controls && controls == 40) {player2.y+=player2.speed}
-    if (controls && controls == 38) {player2.y-=player2.speed}
-    if (controls && controls == 83) {player1.y+=player1.speed}
-    if (controls && controls == 87) {player1.y-=player1.speed}
+    if (controls && controls[40]) {player2.y+=player2.speed}
+    if (controls && controls[38]) {player2.y-=player2.speed}
+    if (controls && controls[83]) {player1.y+=player1.speed}
+    if (controls && controls[87]) {player1.y-=player1.speed}
     
 }
 
