@@ -4,19 +4,27 @@ canvas.width = 1000;
 canvas.height = 600;
 let interval;
 
+
+
+
 class Pokemon {
-    constructor(x,y,w,h,color){
+    constructor(x,y,w,h,direction){
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
-        this.life = 5;
-        this.speed = 15;
-        this.color = color
+        this.life = 12;
+        this.speed = 10;
+        // this.color = color;
+        this.powerBall = [];
+        this.direction = direction;
+
+
     }
     draw(){
-        ctx.fillStyle = this.color
         ctx.fillRect(this.x, this.y, this.w, this.h)
+        ctx.fillStyle = 'green'
+        ctx.fillRect(this.x,50,this.life*15,40);
     }
     crashWith(item) {
         return (this.x < item.x + item.w) &&
@@ -24,7 +32,23 @@ class Pokemon {
         (this.y < item.y + item.h) &&
         (this.y + this.h > item.y);
     }
-    
+    makePowerBall(){
+        let xPos = this.direction == 1 ? this.x + this.w : this.x
+        this.powerBall.push(new PowerBall(xPos,this.y,40,40,this.color,this.direction))
+    }
+    drawPowerBall(){
+        this.powerBall.forEach(function(ele){
+            ele.draw();
+        })
+    }
+    checkCollition(oponent) {
+        this.powerBall.forEach((ele, i) => {
+            if(ele.crashWith(oponent)) {
+            this.powerBall.splice(i, 1);
+            oponent.life-=ele.damage;
+            }
+        });
+    }
 }
 
 class PowerBall {
@@ -36,6 +60,7 @@ class PowerBall {
         this.speed = 10;
         this.color = color;
         this.direction =direction;
+        this.damage = 1;
     }
     
     draw(){
@@ -52,101 +77,53 @@ class PowerBall {
 }
 
 // INSTANCIAS
-let powerBall = []; 
-let powerBall2 = []; 
-let squirtle = new Pokemon (100,300,60,60, 'blue');
-let charmander = new Pokemon (800,300,60,60, 'red')
 
-//COMPLEMENTOS
-
-//Poderes Jugador 1
-function makePowerBall1(){
-    powerBall.push(new PowerBall(squirtle.x+squirtle.w,squirtle.y,40,40,'blue',1))
-}
-
-function drawPowerBall1(){
-    powerBall.forEach(function(ele){
-        ele.draw();
-    })
-}
-
-//Poderes Jugador 2
-function makePowerBall2(){
-    powerBall2.push(new PowerBall(charmander.x,charmander.y,40,40, 'red',-1))
-}
-
-function drawPowerBall2(){
-    powerBall2.forEach(function(ele){
-        ele.draw();
-    })
-}
-
-//Revisa si se da la colisión
-function checkCollition() {
-    powerBall.forEach((ele, i) => {
-        if(ele.crashWith(charmander)) {
-            powerBall.splice(i, 1);
-        }
-    });
-}
-
-function checkCollition2() {
-    powerBall2.forEach((ele, i) => {
-        if(ele.crashWith(squirtle)) {
-            powerBall2.splice(i, 1);
-        }
-    });
-}
-
-
-
-
-
-//EL JUEGO
-
-function refresh(){
-    ctx.clearRect(0,0,canvas.width, canvas.height);
-    squirtle.draw();
-    charmander.draw();
-    drawPowerBall1();
-    drawPowerBall2();
-    checkCollition();
-    checkCollition2();
-
-}
+let player1 = new Pokemon (100,300,80,80,1);
+let player2 = new Pokemon (800,300,80,80,-1)
 
 //CONTROLES
 
-window.addEventListener('keydown', function(event) {
-    switch (event.which){
-        case 68:
-            makePowerBall1();
-            break
-        
-        case 37:
-            makePowerBall2();
-            break
-        
-        case 87:
-            squirtle.y-=squirtle.speed
-            break
+let controls;
 
-        case 83:
-            squirtle.y+=squirtle.speed
-            break
-
-        case 38:
-            charmander.y-=charmander.speed
-            break
-
-        case 40:
-            charmander.y+=charmander.speed
-            break
-
-    } 
-    
+window.addEventListener('keydown', function (e) {
+    if(e.keyCode == 37) {player2.makePowerBall()}
+    if(e.keyCode == 68) {player1.makePowerBall()}
+    controls = e.keyCode;
 });
 
+window.addEventListener('keyup', function () {
+    controls = false;
+});
 
+function controlPlayer(){
+    if (controls && controls == 40) {player2.y+=player2.speed}
+    if (controls && controls == 38) {player2.y-=player2.speed}
+    if (controls && controls == 83) {player1.y+=player1.speed}
+    if (controls && controls == 87) {player1.y-=player1.speed}
+    
+}
+
+//EL JUEGO
+
+function gameOver(player) {
+    if(player.life <= 0) {
+        clearInterval(interval);
+    }
+}
+
+function refresh(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    player1.drawPowerBall();
+    player2.drawPowerBall();
+    player1.checkCollition(player2);
+    player2.checkCollition(player1);
+    player1.draw();
+    player2.draw();
+    controlPlayer();
+    gameOver(player1);
+    gameOver(player2);
+    
+
+}
 
 interval = setInterval(refresh, 1000/60);
