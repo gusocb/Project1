@@ -3,29 +3,46 @@ let ctx = canvas.getContext('2d');
 canvas.width = 1000;
 canvas.height = 600;
 let interval;
+let frames = 0;
+let animationCurrentFrame=0;
 
+//RECURSOS
+let maxLife=12
+let backgroundImg = document.getElementById('background');
+let squirtleImgLeft = document.getElementById('squirtle-left');
+let squirtleImgRight = document.getElementById('squirtle-right');
 
-
+//CLASES
 
 class Pokemon {
-    constructor(x,y,w,h,direction){
+    constructor(x,y,w,h,direction,img){
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
-        this.life = 12;
+        this.life = maxLife;
         this.speed = 13;
-        // this.color = color;
         this.powerBall = [];
         this.direction = direction;
         this.cant = 3;
-
-
+        this.img = img;
+        
+        
     }
     draw(){
-        ctx.fillRect(this.x, this.y, this.w, this.h)
-        ctx.fillStyle = 'green'
-        ctx.fillRect(this.x,50,this.life*15,40);
+        ctx.drawImage(this.img,animationCurrentFrame*115/3,0,115/3,36,this.x,this.y,this.w,this.h)
+    }
+    drawHealthBar(){
+        ctx.strokeStyle = 'white';
+        ctx.strokeRect(this.x,50,maxLife*15,40)
+        if (this.life > 5){
+            ctx.fillStyle = 'green'
+            ctx.fillRect(this.x,50,this.life*15,40);
+        }
+        else{
+            ctx.fillStyle= 'red'
+            ctx.fillRect(this.x,50,this.life*15,40);
+        }
     }
     crashWith(item) {
         return (this.x < item.x + item.w) &&
@@ -45,8 +62,8 @@ class Pokemon {
     checkCollition(oponent) {
         this.powerBall.forEach((ele, i) => {
             if(ele.crashWith(oponent)) {
-            this.powerBall.splice(i, 1);
-            oponent.life-=ele.damage;
+                this.powerBall.splice(i, 1);
+                oponent.life-=ele.damage;
             }
         });
     }
@@ -61,7 +78,7 @@ class PowerBall {
         this.speed = 8;
         this.color = color;
         this.direction =direction;
-        this.damage = 1;
+        this.damage = 0.75;
     }
     
     draw(){
@@ -79,8 +96,8 @@ class PowerBall {
 
 // INSTANCIAS
 
-let player1 = new Pokemon (100,300,80,80,1);
-let player2 = new Pokemon (800,300,80,80,-1)
+let player1 = new Pokemon (100,300,80,80,1,squirtleImgLeft);
+let player2 = new Pokemon (800,300,80,80,-1,squirtleImgRight);
 
 //CONTROLES
 let controls = [];
@@ -135,12 +152,17 @@ function gameOver(player) {
 
 function refresh(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.drawImage(backgroundImg,0,0,canvas.width,canvas.height)
+    frames++;
+    animationCurrentFrame = ++animationCurrentFrame % 3;
     player1.drawPowerBall();
     player2.drawPowerBall();
     player1.checkCollition(player2);
     player2.checkCollition(player1);
     player1.draw();
     player2.draw();
+    player1.drawHealthBar();
+    player2.drawHealthBar();
     controlPlayer();
     checkBorders(player1);
     checkBorders(player2);
