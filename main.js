@@ -14,11 +14,11 @@ class Pokemon {
         this.w = w;
         this.h = h;
         this.life = 12;
-        this.speed = 10;
+        this.speed = 13;
         // this.color = color;
         this.powerBall = [];
         this.direction = direction;
-        this.cant = 5;
+        this.cant = 3;
 
 
     }
@@ -58,7 +58,7 @@ class PowerBall {
         this.y = y;
         this.w = w;
         this.h = h;
-        this.speed = 10;
+        this.speed = 8;
         this.color = color;
         this.direction =direction;
         this.damage = 1;
@@ -91,11 +91,19 @@ window.addEventListener('keydown', function (e) {
             player2.makePowerBall()
             player2.cant--
             if(player2.cant <= 0) {
-                setTimeout(()=> player2.cant = 5, 1000)
+                setTimeout(()=> player2.cant = 3, 1000)
             }
         }
     }
-    if(e.keyCode == 68) {player1.makePowerBall()}
+    if(e.keyCode == 68) {
+        if(player1.cant > 0) {
+            player1.makePowerBall()
+            player1.cant--
+            if(player1.cant <= 0) {
+                setTimeout(()=> player1.cant = 3, 1000)
+            }
+        }
+    }
     controls = (controls || [])
     controls[e.keyCode] = true;
 });
@@ -110,6 +118,11 @@ function controlPlayer(){
     if (controls && controls[83]) {player1.y+=player1.speed}
     if (controls && controls[87]) {player1.y-=player1.speed}
     
+}
+
+function checkBorders(player){
+    if(player.y <= 100){player.y = 100};
+    if(player.y >= canvas.height - player.h) {player.y =canvas.height-player.h };
 }
 
 //EL JUEGO
@@ -129,6 +142,8 @@ function refresh(){
     player1.draw();
     player2.draw();
     controlPlayer();
+    checkBorders(player1);
+    checkBorders(player2);
     gameOver(player1);
     gameOver(player2);
     
