@@ -11,11 +11,15 @@ let maxLife=12
 let backgroundImg = document.getElementById('background');
 let squirtleImgLeft = document.getElementById('squirtle-left');
 let squirtleImgRight = document.getElementById('squirtle-right');
+let charmanderImgLeft = document.getElementById('charmander-left');
+let waterballImg = document.getElementById('waterball');
+let fireballImg = document.getElementById('fireball');
+
 
 //CLASES
 
 class Pokemon {
-    constructor(x,y,w,h,direction,img){
+    constructor(x,y,w,h,direction,img,pbImg){
         this.x = x;
         this.y = y;
         this.w = w;
@@ -26,6 +30,7 @@ class Pokemon {
         this.direction = direction;
         this.cant = 3;
         this.img = img;
+        this.pbImg = pbImg;
         
         
     }
@@ -52,7 +57,7 @@ class Pokemon {
     }
     makePowerBall(){
         let xPos = this.direction == 1 ? this.x + this.w : this.x
-        this.powerBall.push(new PowerBall(xPos,this.y,40,40,this.color,this.direction))
+        this.powerBall.push(new PowerBall(xPos,this.y,40,40,this.direction,this.pbImg))
     }
     drawPowerBall(){
         this.powerBall.forEach(function(ele){
@@ -70,21 +75,20 @@ class Pokemon {
 }
 
 class PowerBall {
-    constructor(x,y,w,h,color,direction){
+    constructor(x,y,w,h,direction,img){
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.speed = 8;
-        this.color = color;
         this.direction =direction;
         this.damage = 0.75;
+        this.img = img
     }
     
     draw(){
-        ctx.fillStyle = this.color
         this.x+=this.speed*this.direction;
-        ctx.fillRect(this.x,this.y,this.w,this.h)
+        ctx.drawImage(this.img,this.x,this.y,this.w,this.h)
     }
     crashWith(item) {
         return (this.x < item.x + item.w) &&
@@ -96,8 +100,8 @@ class PowerBall {
 
 // INSTANCIAS
 
-let player1 = new Pokemon (100,300,80,80,1,squirtleImgLeft);
-let player2 = new Pokemon (800,300,80,80,-1,squirtleImgRight);
+let player1 = new Pokemon (100,300,80,80,1,charmanderImgLeft,fireballImg);
+let player2 = new Pokemon (800,300,80,80,-1,squirtleImgRight,waterballImg);
 
 //CONTROLES
 let controls = [];
@@ -108,7 +112,7 @@ window.addEventListener('keydown', function (e) {
             player2.makePowerBall()
             player2.cant--
             if(player2.cant <= 0) {
-                setTimeout(()=> player2.cant = 3, 1000)
+                setTimeout(()=> player2.cant = 3, 800)
             }
         }
     }
@@ -117,7 +121,7 @@ window.addEventListener('keydown', function (e) {
             player1.makePowerBall()
             player1.cant--
             if(player1.cant <= 0) {
-                setTimeout(()=> player1.cant = 3, 1000)
+                setTimeout(()=> player1.cant = 3, 800)
             }
         }
     }
@@ -154,7 +158,9 @@ function refresh(){
     ctx.clearRect(0,0,canvas.width, canvas.height);
     ctx.drawImage(backgroundImg,0,0,canvas.width,canvas.height)
     frames++;
+    if(frames%20==0){
     animationCurrentFrame = ++animationCurrentFrame % 3;
+    }
     player1.drawPowerBall();
     player2.drawPowerBall();
     player1.checkCollition(player2);
