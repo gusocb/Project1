@@ -5,15 +5,21 @@ canvas.height = 600;
 let interval;
 let frames = 0;
 let animationCurrentFrame=0;
+let scene=1;
+
+
 
 //RECURSOS
 let maxLife=12
+let homescreenImg = document.getElementById('homescreen');
 let backgroundImg = document.getElementById('background');
 let squirtleImgLeft = document.getElementById('squirtle-left');
 let squirtleImgRight = document.getElementById('squirtle-right');
 let charmanderImgLeft = document.getElementById('charmander-left');
 let waterballImg = document.getElementById('waterball');
 let fireballImg = document.getElementById('fireball');
+let homeAudio = document.getElementById('home-music');
+let battleAudio = document.getElementById('battle-music');
 
 
 //CLASES
@@ -107,6 +113,7 @@ let player2 = new Pokemon (800,300,80,80,-1,squirtleImgRight,waterballImg);
 let controls = [];
 
 window.addEventListener('keydown', function (e) {
+    if(e.keyCode ==13){scene=2}
     if(e.keyCode == 37) {
         if(player2.cant > 0) {
             player2.makePowerBall()
@@ -148,6 +155,13 @@ function checkBorders(player){
 
 //EL JUEGO
 
+//scene inicial
+
+function homeScreen(){
+    ctx.drawImage(homescreenImg,0,0,canvas.width,canvas.height);
+    homeAudio.play();
+}
+
 function gameOver(player) {
     if(player.life <= 0) {
         clearInterval(interval);
@@ -155,27 +169,35 @@ function gameOver(player) {
 }
 
 function refresh(){
-    ctx.clearRect(0,0,canvas.width, canvas.height);
-    ctx.drawImage(backgroundImg,0,0,canvas.width,canvas.height)
-    frames++;
-    if(frames%20==0){
-    animationCurrentFrame = ++animationCurrentFrame % 3;
+    if(scene==1){            
+        homeScreen();
     }
-    player1.drawPowerBall();
-    player2.drawPowerBall();
-    player1.checkCollition(player2);
-    player2.checkCollition(player1);
-    player1.draw();
-    player2.draw();
-    player1.drawHealthBar();
-    player2.drawHealthBar();
-    controlPlayer();
-    checkBorders(player1);
-    checkBorders(player2);
-    gameOver(player1);
-    gameOver(player2);
+    else{
+        homeAudio.pause();
+        battleAudio.play();
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        ctx.drawImage(backgroundImg,0,0,canvas.width,canvas.height)
+        frames++;
+        if(frames%20==0){
+        animationCurrentFrame = ++animationCurrentFrame % 3;
+        }
+        player1.drawPowerBall();
+        player2.drawPowerBall();
+        player1.checkCollition(player2);
+        player2.checkCollition(player1);
+        player1.draw();
+        player2.draw();
+        player1.drawHealthBar();
+        player2.drawHealthBar();
+        controlPlayer();
+        checkBorders(player1);
+        checkBorders(player2);
+        gameOver(player1);
+        gameOver(player2);
+    }
     
 
 }
 
 interval = setInterval(refresh, 1000/60);
+
