@@ -35,9 +35,12 @@ class Pokemon {
         this.powerBall = [];
         this.direction = direction;
         this.cant = 3;
-        this.img = img;
+        this.img = new Image();
+        this.img.src = 'assets/charmanderspriteleft.png';
+        this.img.onload = function() {
+            this.draw()
+        }
         this.pbImg = pbImg;
-        
         
     }
     draw(){
