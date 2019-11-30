@@ -92,7 +92,7 @@ class PowerBall {
         this.h = h;
         this.speed = 8;
         this.direction =direction;
-        this.damage = 0.75;
+        this.damage = 0.5;
         this.img = img
     }
     
