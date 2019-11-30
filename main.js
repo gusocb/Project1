@@ -40,19 +40,24 @@ class Pokemon {
         
     }
     draw(){
-        ctx.drawImage(this.img,animationCurrentFrame*115/3,0,115/3,36,this.x,this.y,this.w,this.h)
+        ctx.drawImage(this.img,animationCurrentFrame*120/3,0,120/3,40,this.x,this.y,this.w,this.h)
     }
     drawHealthBar(){
         ctx.strokeStyle = 'white';
-        ctx.strokeRect(this.x,50,maxLife*15,40)
+        ctx.strokeRect(this.x-30,50,maxLife*15,40)
         if (this.life > 5){
             ctx.fillStyle = 'green'
-            ctx.fillRect(this.x,50,this.life*15,40);
+            ctx.fillRect(this.x-30,50,this.life*15,40);
         }
         else{
             ctx.fillStyle= 'red'
-            ctx.fillRect(this.x,50,this.life*15,40);
+            ctx.fillRect(this.x-30,50,this.life*15,40);
         }
+        ctx.font = "30px Arial";
+        ctx.fillStyle='white'
+        ctx.fillText("CHARMANDER",70, 35);
+        ctx.fillText("SQUIRTLE", 800, 35);
+
     }
     crashWith(item) {
         return (this.x < item.x + item.w) &&
@@ -158,13 +163,20 @@ function checkBorders(player){
 
 function homeScreen(){
     ctx.drawImage(homescreenImg,0,0,canvas.width,canvas.height);
-    homeAudio.play();
+    // homeAudio.play();
 }
 
-function gameOver(player) {
-    if(player.life <= 0) {
-        clearInterval(interval);
-    }
+function gameOver() {
+    if(player1.life <= 0){
+        const p1wins = document.querySelector('#p1wins')
+        p1wins.style.display = ''
+        clearInterval(interval)
+       }
+       if(player2.life <= 0){     
+        const p2wins = document.querySelector('#p2wins')
+        p2wins.style.display = ''
+        clearInterval(interval)
+       }
 }
 
 function refresh(){
@@ -172,8 +184,8 @@ function refresh(){
         homeScreen();
     }
     else{
-        homeAudio.pause();
-        battleAudio.play();
+        // homeAudio.pause();
+        // battleAudio.play();
         ctx.clearRect(0,0,canvas.width, canvas.height);
         ctx.drawImage(backgroundImg,0,0,canvas.width,canvas.height)
         frames++;
@@ -191,8 +203,7 @@ function refresh(){
         controlPlayer();
         checkBorders(player1);
         checkBorders(player2);
-        gameOver(player1);
-        gameOver(player2);
+        gameOver();
     }
     
 
