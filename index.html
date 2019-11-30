@@ -4,24 +4,53 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Gustavo's Game</title>
-
+        <title>Pokémon Ultimate Shooter Battle</title>
+        <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <p id="p1wins" style="display: none">Game Over! SQUIRTLE Wins!</p>
-        <p id="p2wins" style="display: none">Game Over! CHARMANDER Wins!</p>
-        <div id="playagain" style="display: none"><button type="button" class="btn btn-success" >Play Again</button></div>
-        <canvas id="game"></canvas>
+        <div class="main-screen">
+            <div class='player'>
+                <h1>PLAYER 1</h1>
+                <ul>
+                    <li>W => UP</li>
+                    <li>S => DOWN</li>
+                    <li>D => SHOOT</li>
+                </ul>
+            </div>
+            
+            <div class="canvas">
+                <canvas id="game"></canvas>
+            </div>
+
+            <div class="player">
+                <h1>PLAYER 2</h1>
+                <ul>
+                    <li>P => UP</li>
+                    <li>L => DOWN</li>
+                    <li>K => SHOOT</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="winner">
+            <p id="p1wins" style="display: none">Game Over! SQUIRTLE Wins!!!</p>
+            <p id="p2wins" style="display: none">Game Over! CHARMANDER Wins!!!!</p>
+        </div>    
+                
+
+
+
+
         <img style="display: none" id='homescreen' src="./assets/homescreen.png">
         <img style="display: none" id='background' src="./assets/background.png">
         <img style="display: none" id = 'squirtle-right' src = "./assets/squirtle-sprite.png">
         <img style="display: none" id = 'charmander-left' src = "./assets/charmander-sprite.png">
         <img style="display: none" id = 'waterball' src = "./assets/waterball.png">
         <img style="display: none" id = 'fireball' src = "./assets/fireball.png">
-
         <audio id='home-music' src="assets/Pokémon Theme.ogg"></audio>
         <audio id='battle-music' src="assets/BattleSong.ogg"></audio>
         <script src="main.js"></script>
+    
     </body>
 </html>

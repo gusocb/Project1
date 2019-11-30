@@ -118,12 +118,12 @@ let controls = [];
 
 window.addEventListener('keydown', function (e) {
     if(e.keyCode ==13){scene=2}
-    if(e.keyCode == 37) {
+    if(e.keyCode == 75) {
         if(player2.cant > 0) {
             player2.makePowerBall()
             player2.cant--
             if(player2.cant <= 0) {
-                setTimeout(()=> player2.cant = 3, 800)
+                setTimeout(()=> player2.cant = 3, 700)
             }
         }
     }
@@ -132,7 +132,7 @@ window.addEventListener('keydown', function (e) {
             player1.makePowerBall()
             player1.cant--
             if(player1.cant <= 0) {
-                setTimeout(()=> player1.cant = 3, 800)
+                setTimeout(()=> player1.cant = 3, 700)
             }
         }
     }
@@ -145,8 +145,8 @@ window.addEventListener('keyup', function (e) {
 });
 
 function controlPlayer(){
-    if (controls && controls[40]) {player2.y+=player2.speed}
-    if (controls && controls[38]) {player2.y-=player2.speed}
+    if (controls && controls[76]) {player2.y+=player2.speed}
+    if (controls && controls[80]) {player2.y-=player2.speed}
     if (controls && controls[83]) {player1.y+=player1.speed}
     if (controls && controls[87]) {player1.y-=player1.speed}
     
@@ -163,7 +163,7 @@ function checkBorders(player){
 
 function homeScreen(){
     ctx.drawImage(homescreenImg,0,0,canvas.width,canvas.height);
-    // homeAudio.play();
+    homeAudio.play();
 }
 
 function gameOver() {
@@ -184,8 +184,8 @@ function refresh(){
         homeScreen();
     }
     else{
-        // homeAudio.pause();
-        // battleAudio.play();
+        homeAudio.pause();
+        battleAudio.play();
         ctx.clearRect(0,0,canvas.width, canvas.height);
         ctx.drawImage(backgroundImg,0,0,canvas.width,canvas.height)
         frames++;

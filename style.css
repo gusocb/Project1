@@ -1,3 +1,42 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #22477A;
+    color:yellow;
+    font-family: 'Press Start 2P', bold;
+}
+
+.main-screen{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
 canvas {
     border: 2px solid black;
+    display: flex;
+    justify-content: center;
+}
+
+.player{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.player h1{
+    font-size: x-large;
+}
+
+.player ul{
+    width: 100%;
+    list-style: none;
+    font-size: 1rem;
+    padding: 10;
+}
+
+.winner{
+    font-size: large;
 }
