@@ -1,7 +1,7 @@
 let canvas = document.getElementById('game')
 let ctx = canvas.getContext('2d');
 canvas.width = 1000;
-canvas.height = 600;
+canvas.height = 550;
 let interval;
 let frames = 0;
 let animationCurrentFrame=0;
@@ -157,6 +157,8 @@ function checkBorders(player){
     if(player.y >= canvas.height - player.h) {player.y =canvas.height-player.h };
 }
 
+again.onclick = function(){
+    location.reload()}
 //EL JUEGO
 
 //scene inicial
@@ -170,11 +172,15 @@ function gameOver() {
     if(player1.life <= 0){
         const p1wins = document.querySelector('#p1wins')
         p1wins.style.display = ''
+        const again=document.querySelector('#again')
+        again.style.display = ''
         clearInterval(interval)
-       }
-       if(player2.life <= 0){     
+    }
+    if(player2.life <= 0){     
         const p2wins = document.querySelector('#p2wins')
         p2wins.style.display = ''
+        const again=document.querySelector('#again')
+        again.style.display = ''
         clearInterval(interval)
        }
 }
@@ -209,5 +215,7 @@ function refresh(){
 
 }
 
+
 interval = setInterval(refresh, 1000/60);
+
 
